@@ -1,9 +1,11 @@
 
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *  The {@code DijkstraSP} class represents a data type for solving the
+ *  The {@code Graph_algo} class represents a data type for solving the
  *  single-source shortest paths problem in edge-weighted digraphs
  *  where the edge weights are nonnegative.
  *  <p>
@@ -21,46 +23,50 @@ import java.io.File;
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
-public class DijkstraSP {
+public class Graph_algo {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
+    private Graph graph;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
      * vertex in the edge-weighted digraph {@code G}.
      *
-     * @param  G the edge-weighted digraph
-     * @param  s the source vertex
+     * @param  graph the edge-weighted digraph
+     * @param  sourceVertex the source vertex
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
-    public DijkstraSP(EdgeWeightedDigraph G, int s) {
-        for (DirectedEdge e : G.edges()) {
+    public Graph_algo(Graph graph, int sourceVertex) {
+    	
+    	//check legal weight of graphs edges.
+        for (DirectedEdge e : graph.edges()) {
             if (e.weight() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
+        
+        distTo = new double[graph.V()];
+        edgeTo = new DirectedEdge[graph.V()];
+        this.graph = new Graph(graph);
 
-        distTo = new double[G.V()];
-        edgeTo = new DirectedEdge[G.V()];
+        validateVertex(sourceVertex);
 
-        validateVertex(s);
-
-        for (int v = 0; v < G.V(); v++)
+        for (int v = 0; v < graph.V(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
-        distTo[s] = 0.0;
+        distTo[sourceVertex] = 0.0;
 
         // relax vertices in order of distance from s
-        pq = new IndexMinPQ<Double>(G.V());
-        pq.insert(s, distTo[s]);
+        pq = new IndexMinPQ<Double>(graph.V());
+        pq.insert(sourceVertex, distTo[sourceVertex]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (DirectedEdge e : G.adj(v))
+            for (DirectedEdge e : graph.adj(v))
                 relax(e);
         }
 
         // check optimality conditions
-        assert check(G, s);
+        assert check(graph, sourceVertex);
     }
 
     // relax edge e and update pq if changed
@@ -81,9 +87,30 @@ public class DijkstraSP {
      *         {@code Double.POSITIVE_INFINITY} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public double distTo(int v) {
+    private double distTo(int v) {
         validateVertex(v);
         return distTo[v];
+    }
+    
+    public double distAToB(int a, int b) {
+        validateVertex(a);
+        validateVertex(b);
+        Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
+        return tempGraphAlgo.distTo[b];
+    }
+    
+    public double distAToB_WithBlackList(int a, int b, List<Integer> blackList) {
+        validateVertex(a);
+        validateVertex(b);
+        Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
+        
+        for(int i : blackList){
+        	tempGraphAlgo.distTo[i]= Double.POSITIVE_INFINITY;
+        	for (DirectedEdge e : tempGraphAlgo.graph.edges())
+        		tempGraphAlgo.relax(e);
+    }
+
+        return tempGraphAlgo.distTo(b);
     }
 
     /**
@@ -107,7 +134,7 @@ public class DijkstraSP {
      *         as an iterable of edges, and {@code null} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Iterable<DirectedEdge> pathTo(int v) {
+    private Iterable<DirectedEdge> pathTo(int v) {
         validateVertex(v);
         if (!hasPathTo(v)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
@@ -116,12 +143,19 @@ public class DijkstraSP {
         }
         return path;
     }
+    
+    public Iterable<DirectedEdge> pathAToB(int a, int b) {
+        validateVertex(a);
+        validateVertex(b);
+        Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
+        return tempGraphAlgo.pathTo(b);
+    }
 
 
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(EdgeWeightedDigraph G, int s) {
+    private boolean check(Graph G, int s) {
 
         // check that edge weights are nonnegative
         for (DirectedEdge e : G.edges()) {
@@ -177,34 +211,38 @@ public class DijkstraSP {
     }
 
     /**
-     * Unit tests the {@code DijkstraSP} data type.
+     * Unit tests the {@code Graph_algo} data type.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
     	File f1= new File("c:\\G0.txt");
-        In in = new In(f1);
-        EdgeWeightedDigraph G = new EdgeWeightedDigraph(in);
-        int s = 2;
+        //In in = new In(f1);
+        Graph G = new Graph(f1);
+        int s = 1;
 
         // compute shortest paths
-        DijkstraSP sp = new DijkstraSP(G, s);
+        Graph_algo sp = new Graph_algo(G, s);
+        List<Integer> blackList = new ArrayList<Integer>();
+        blackList.add(4);
+        StdOut.println(sp.pathAToB(1,5));
+        StdOut.println(sp.distAToB_WithBlackList(1, 5, blackList));
 
 
         // print shortest path
-        for (int t = 0; t < G.V(); t++) {
-            if (sp.hasPathTo(t)) {
-                StdOut.printf("%d to %d (%.2f)  ", s, t, sp.distTo(t));
-                for (DirectedEdge e : sp.pathTo(t)) {
-                    StdOut.print(e + "   ");
-                }
-                StdOut.println();
-            }
-            else {
-                StdOut.printf("%d to %d         no path\n", s, t);
-            }
-        }
-        System.out.println(sp.pathTo(4));
+//        for (int t = 0; t < G.V(); t++) {
+//            if (sp.hasPathTo(t)) {
+//                StdOut.printf("%d to %d (%.2f)  ", s, t, sp.distTo(t));
+//                for (DirectedEdge e : sp.pathTo(t)) {
+//                    StdOut.print(e + "   ");
+//                }
+//                StdOut.println();
+//            }
+//            else {
+//                StdOut.printf("%d to %d         no path\n", s, t);
+//            }
+//        }
+//        System.out.println(sp.pathTo(4));
     }
 
 }

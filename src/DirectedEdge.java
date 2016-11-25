@@ -9,7 +9,7 @@
 
 /**
  *  The {@code DirectedEdge} class represents a weighted edge in an 
- *  {@link EdgeWeightedDigraph}. Each edge consists of two integers
+ *  {@link Graph}. Each edge consists of two integers
  *  (naming the two vertices) and a real-value weight. The data type
  *  provides methods for accessing the two endpoints of the directed edge and
  *  the weight.

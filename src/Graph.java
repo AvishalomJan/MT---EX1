@@ -1,6 +1,8 @@
+import java.io.File;
+
 /******************************************************************************
- *  Compilation:  javac EdgeWeightedDigraph.java
- *  Execution:    java EdgeWeightedDigraph digraph.txt
+ *  Compilation:  javac Graph.java
+ *  Execution:    java Graph digraph.txt
  *  Dependencies: Bag.java DirectedEdge.java
  *  Data files:   http://algs4.cs.princeton.edu/44st/tinyEWD.txt
  *                http://algs4.cs.princeton.edu/44st/mediumEWD.txt
@@ -13,7 +15,7 @@
 
 
 /**
- *  The {@code EdgeWeightedDigraph} class represents a edge-weighted
+ *  The {@code Graph} class represents a edge-weighted
  *  digraph of vertices named 0 through <em>V</em> - 1, where each
  *  directed edge is of type {@link DirectedEdge} and has a real-valued weight.
  *  It supports the following two primary operations: add a directed edge
@@ -35,7 +37,7 @@
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  */
-public class EdgeWeightedDigraph {
+public class Graph {
     private static final String NEWLINE = System.getProperty("line.separator");
 
     private final int V;                // number of vertices in this digraph
@@ -49,7 +51,7 @@ public class EdgeWeightedDigraph {
      * @param  V the number of vertices
      * @throws IllegalArgumentException if {@code V < 0}
      */
-    public EdgeWeightedDigraph(int V) {
+    public Graph(int V) {
         if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.V = V;
         this.E = 0;
@@ -67,7 +69,7 @@ public class EdgeWeightedDigraph {
      * @throws IllegalArgumentException if {@code V < 0}
      * @throws IllegalArgumentException if {@code E < 0}
      */
-    public EdgeWeightedDigraph(int V, int E) {
+    public Graph(int V, int E) {
         this(V);
         if (E < 0) throw new IllegalArgumentException("Number of edges in a Digraph must be nonnegative");
         for (int i = 0; i < E; i++) {
@@ -90,8 +92,11 @@ public class EdgeWeightedDigraph {
      * @throws IllegalArgumentException if the endpoints of any edge are not in prescribed range
      * @throws IllegalArgumentException if the number of vertices or edges is negative
      */
-    public EdgeWeightedDigraph(In in) {
-        this(in.readInt());
+    public Graph(File file) {
+    	
+        this(new In(file).readInt());
+        In in = new In(file);
+        in.readInt();
         int E = in.readInt();
         if (E < 0) throw new IllegalArgumentException("Number of edges must be nonnegative");
         for (int i = 0; i < E; i++) {
@@ -109,7 +114,7 @@ public class EdgeWeightedDigraph {
      *
      * @param  G the edge-weighted digraph to copy
      */
-    public EdgeWeightedDigraph(EdgeWeightedDigraph G) {
+    public Graph(Graph G) {
         this(G.V());
         this.E = G.E();
         for (int v = 0; v < G.V(); v++)
@@ -243,14 +248,14 @@ public class EdgeWeightedDigraph {
     }
 
     /**
-     * Unit tests the {@code EdgeWeightedDigraph} data type.
+     * Unit tests the {@code Graph} data type.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
         In in = new In(args[0]);
-        EdgeWeightedDigraph G = new EdgeWeightedDigraph(in);
-        StdOut.println(G);
+        //Graph G = new Graph(in);
+        //StdOut.println(G);
     }
 
 }
