@@ -92,19 +92,19 @@ public class Graph_algo {
         return distTo[v];
     }
     
-    public void distAToB(int a, int b) {
+    public String distAToB(int a, int b) {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        StdOut.println(tempGraphAlgo.distTo(b));
+        return String.valueOf(tempGraphAlgo.distTo(b));
     }
     
-    public void distAToB_WithBlackList(int a, int b, int [] arrBlackList) {
+    public String distAToB_WithBlackList(int a, int b, int [] arrBlackList) {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
         tempGraphAlgo.graph.setBL(arrBlackList);
-        StdOut.println(tempGraphAlgo.distTo(b));
+        return String.valueOf(tempGraphAlgo.distTo(b));
     }
 
     /**
@@ -153,6 +153,13 @@ public class Graph_algo {
         StdOut.println(tempGraphAlgo.pathTo(b));
         graph.RetBL(arrBlackList);
     }
+    
+	public String getInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 
     // check optimality conditions:
@@ -229,28 +236,10 @@ public class Graph_algo {
         int arrBL [] ={4};
         sp.distAToB_WithBlackList(1, 5, arrBL);
         sp.PathAToB_WithBlackList(1, 5, arrBL);
-        //sp.graph.setBL(arrBL);
-        //StdOut.println(sp.pathAToB(1,5));
-        //StdOut.println(sp.distAToB_WithBlackList(1, 5, blackList));
 
-
-        // print shortest path
-//        for (int t = 0; t < G.V(); t++) {
-//            if (sp.hasPathTo(t)) {
-//                StdOut.printf("%d to %d (%.2f)  ", s, t, sp.distTo(t));
-//                for (DirectedEdge e : sp.pathTo(t)) {
-//                    StdOut.print(e + "   ");
-//                }
-//                StdOut.println();
-//            }
-//            else {
-//                StdOut.printf("%d to %d         no path\n", s, t);
-//            }
-//        }
-//        System.out.println(sp.pathTo(4));
     }
-
 }
+
 
 /******************************************************************************
  *  Copyright 2002-2016, Robert Sedgewick and Kevin Wayne.
