@@ -24,7 +24,7 @@
 public class DirectedEdge { 
     private final int v;
     private final int w;
-    private final double weight;
+    private  double weight;
 
     /**
      * Initializes a directed edge from vertex {@code v} to vertex {@code w} with
@@ -86,6 +86,11 @@ public class DirectedEdge {
         DirectedEdge e = new DirectedEdge(12, 34, 5.67);
         StdOut.println(e);
     }
+
+    public void setWeight(double weight){
+    	this.weight = weight ;	
+    }
+
 }
 
 /******************************************************************************

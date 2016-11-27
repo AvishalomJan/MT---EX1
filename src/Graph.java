@@ -1,4 +1,7 @@
 import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /******************************************************************************
  *  Compilation:  javac Graph.java
@@ -44,6 +47,8 @@ public class Graph {
     private int E;                      // number of edges in this digraph
     private Bag<DirectedEdge>[] adj;    // adj[v] = adjacency list for vertex v
     private int[] indegree;             // indegree[v] = indegree of vertex v
+    private Queue<Double> queue = new LinkedList<Double>() ;  //queue of black list
+
     
     /**
      * Initializes an empty edge-weighted digraph with {@code V} vertices and 0 edges.
@@ -183,6 +188,35 @@ public class Graph {
     public Iterable<DirectedEdge> adj(int v) {
         validateVertex(v);
         return adj[v];
+    }
+    
+    public void setBL(int[] BList) {
+
+        for (int i = 0; i < BList.length; i++) {
+            Bag B = adj[BList[i]];
+            Iterator It = B.iterator();
+            for (int j = 0; It.hasNext() == true; j++) {
+                DirectedEdge e = (DirectedEdge) It.next();
+                queue.add(e.weight());
+                e.setWeight(100000);
+
+            }
+        }
+
+    }
+    
+    
+    public void RetBL(int[] BList) {
+        for (int i = 0; i < BList.length; i++)
+        {
+            Bag B = adj[BList[i]];
+            Iterator It = B.iterator();
+            for (int j = 0; It.hasNext() == true; j++) {
+                DirectedEdge e = (DirectedEdge) It.next();
+                e.setWeight(queue.poll());
+
+            }
+        }
     }
 
     /**

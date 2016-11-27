@@ -92,25 +92,19 @@ public class Graph_algo {
         return distTo[v];
     }
     
-    public double distAToB(int a, int b) {
+    public void distAToB(int a, int b) {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        return tempGraphAlgo.distTo[b];
+        StdOut.println(tempGraphAlgo.distTo(b));
     }
     
-    public double distAToB_WithBlackList(int a, int b, List<Integer> blackList) {
+    public void distAToB_WithBlackList(int a, int b, int [] arrBlackList) {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        
-        for(int i : blackList){
-        	tempGraphAlgo.distTo[i]= Double.POSITIVE_INFINITY;
-        	for (DirectedEdge e : tempGraphAlgo.graph.edges())
-        		tempGraphAlgo.relax(e);
-    }
-
-        return tempGraphAlgo.distTo(b);
+        tempGraphAlgo.graph.setBL(arrBlackList);
+        StdOut.println(tempGraphAlgo.distTo(b));
     }
 
     /**
@@ -144,11 +138,20 @@ public class Graph_algo {
         return path;
     }
     
-    public Iterable<DirectedEdge> pathAToB(int a, int b) {
+    public void pathAToB(int a, int b) {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        return tempGraphAlgo.pathTo(b);
+        StdOut.println(tempGraphAlgo.pathTo(b));
+    }
+    
+    public void PathAToB_WithBlackList(int a, int b, int [] arrBlackList) {
+        validateVertex(a);
+        validateVertex(b);
+        Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
+        graph.setBL(arrBlackList);
+        StdOut.println(tempGraphAlgo.pathTo(b));
+        graph.RetBL(arrBlackList);
     }
 
 
@@ -223,10 +226,12 @@ public class Graph_algo {
 
         // compute shortest paths
         Graph_algo sp = new Graph_algo(G, s);
-        List<Integer> blackList = new ArrayList<Integer>();
-        blackList.add(4);
-        StdOut.println(sp.pathAToB(1,5));
-        StdOut.println(sp.distAToB_WithBlackList(1, 5, blackList));
+        int arrBL [] ={4};
+        sp.distAToB_WithBlackList(1, 5, arrBL);
+        sp.PathAToB_WithBlackList(1, 5, arrBL);
+        //sp.graph.setBL(arrBL);
+        //StdOut.println(sp.pathAToB(1,5));
+        //StdOut.println(sp.distAToB_WithBlackList(1, 5, blackList));
 
 
         // print shortest path
