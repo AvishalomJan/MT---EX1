@@ -2,6 +2,7 @@
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,8 +51,6 @@ public class Graph_algo {
         edgeTo = new DirectedEdge[graph.getV()];
         this.graph = new Graph(graph);
 
-        validateVertex(sourceVertex);
-
         for (int v = 0; v < graph.getV(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
         distTo[sourceVertex] = 0.0;
@@ -87,24 +86,30 @@ public class Graph_algo {
      *         {@code Double.POSITIVE_INFINITY} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    private double distTo(int v) {
+    public double distTo(int v) {
         validateVertex(v);
+        //System.out.println(Arrays.toString(distTo));
         return distTo[v];
     }
     
     public String distAToB(int a, int b) {
         validateVertex(a);
         validateVertex(b);
-        Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        return String.valueOf(tempGraphAlgo.distTo(b));
+        Graph_algo tempGraphAlgo1 = new Graph_algo(graph, a);
+        Graph_algo tempGraphAlgo2 = new Graph_algo(graph, b);
+        double ans = Math.min(tempGraphAlgo1.distTo(b),tempGraphAlgo2.distTo(a));
+        return String.valueOf(ans);
     }
     
     public String distAToB_WithBlackList(int a, int b, int [] arrBlackList) {
         validateVertex(a);
         validateVertex(b);
-        Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        tempGraphAlgo.graph.AddBlackList(arrBlackList);
-        return String.valueOf(tempGraphAlgo.distTo(b));
+        Graph_algo tempGraphAlgo1 = new Graph_algo(graph, a);
+        tempGraphAlgo1.graph.AddBlackList(arrBlackList);
+        Graph_algo tempGraphAlgo2 = new Graph_algo(graph, b);
+        tempGraphAlgo2.graph.AddBlackList(arrBlackList);
+        double ans = Math.min(tempGraphAlgo1.distTo(b),tempGraphAlgo2.distTo(a));
+        return String.valueOf(ans);
     }
 
     /**
@@ -181,7 +186,7 @@ public class Graph_algo {
 	// check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(Graph G, int s) {
+    public boolean check(Graph G, int s) {
 
         // check that edge weights are nonnegative
         for (DirectedEdge e : G.edges()) {
