@@ -46,18 +46,18 @@ public class Graph_algo {
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
         
-        distTo = new double[graph.V()];
-        edgeTo = new DirectedEdge[graph.V()];
+        distTo = new double[graph.getV()];
+        edgeTo = new DirectedEdge[graph.getV()];
         this.graph = new Graph(graph);
 
         validateVertex(sourceVertex);
 
-        for (int v = 0; v < graph.V(); v++)
+        for (int v = 0; v < graph.getV(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
         distTo[sourceVertex] = 0.0;
 
         // relax vertices in order of distance from s
-        pq = new IndexMinPQ<Double>(graph.V());
+        pq = new IndexMinPQ<Double>(graph.getV());
         pq.insert(sourceVertex, distTo[sourceVertex]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
@@ -103,7 +103,7 @@ public class Graph_algo {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        tempGraphAlgo.graph.setBL(arrBlackList);
+        tempGraphAlgo.graph.AddBlackList(arrBlackList);
         return String.valueOf(tempGraphAlgo.distTo(b));
     }
 
@@ -149,20 +149,36 @@ public class Graph_algo {
         validateVertex(a);
         validateVertex(b);
         Graph_algo tempGraphAlgo = new Graph_algo(graph, a);
-        graph.setBL(arrBlackList);
+        tempGraphAlgo.graph.AddBlackList(arrBlackList);
         StdOut.println(tempGraphAlgo.pathTo(b));
-        graph.RetBL(arrBlackList);
     }
     
 	public String getInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		String info =   "Graph: |V|="+graph.getV()+", |E|="+graph.getE()+
+						" Radius: "+getRadius()+",  Diameter: "+getDiameter()+", runtime: "+
+						getRutTime()+" ms   ";
+		return info;
 	}
 
 
 
 
-    // check optimality conditions:
+    private String getDiameter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getRadius() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private String getRutTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
     private boolean check(Graph G, int s) {
@@ -180,7 +196,7 @@ public class Graph_algo {
             System.err.println("distTo[s] and edgeTo[s] inconsistent");
             return false;
         }
-        for (int v = 0; v < G.V(); v++) {
+        for (int v = 0; v < G.getV(); v++) {
             if (v == s) continue;
             if (edgeTo[v] == null && distTo[v] != Double.POSITIVE_INFINITY) {
                 System.err.println("distTo[] and edgeTo[] inconsistent");
@@ -189,7 +205,7 @@ public class Graph_algo {
         }
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
-        for (int v = 0; v < G.V(); v++) {
+        for (int v = 0; v < G.getV(); v++) {
             for (DirectedEdge e : G.adj(v)) {
                 int w = e.to();
                 if (distTo[v] + e.weight() < distTo[w]) {
@@ -200,7 +216,7 @@ public class Graph_algo {
         }
 
         // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
-        for (int w = 0; w < G.V(); w++) {
+        for (int w = 0; w < G.getV(); w++) {
             if (edgeTo[w] == null) continue;
             DirectedEdge e = edgeTo[w];
             int v = e.from();
