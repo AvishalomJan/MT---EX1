@@ -153,7 +153,7 @@ public class Graph {
      * @return the number of edges in this edge-weighted digraph
      */
 	public int getE() {
-		return E;
+		return E/2;
 	}
 
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
@@ -206,19 +206,7 @@ public class Graph {
         }
         
     }
-    
-    public void RetBL(int[] BList) {
-        for (int i = 0; i < BList.length; i++)
-        {
-            Bag B = neighbors[BList[i]];
-            Iterator It = B.iterator();
-            for (int j = 0; It.hasNext() == true; j++) {
-                DirectedEdge e = (DirectedEdge) It.next();
-                e.setWeight(queue.poll());
 
-            }
-        }
-    }
     
 
     /**

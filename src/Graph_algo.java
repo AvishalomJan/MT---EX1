@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *  The {@code Graph_algo} class represents a data type for solving the
@@ -104,11 +106,13 @@ public class Graph_algo {
     public String distAToB_WithBlackList(int a, int b, int [] arrBlackList) {
         validateVertex(a);
         validateVertex(b);
+        Graph originalGraph = new Graph(graph);
         Graph_algo tempGraphAlgo1 = new Graph_algo(graph, a);
         tempGraphAlgo1.graph.AddBlackList(arrBlackList);
         Graph_algo tempGraphAlgo2 = new Graph_algo(graph, b);
         tempGraphAlgo2.graph.AddBlackList(arrBlackList);
         double ans = Math.min(tempGraphAlgo1.distTo(b),tempGraphAlgo2.distTo(a));
+        this.graph = new Graph(originalGraph);
         return String.valueOf(ans);
     }
 
@@ -160,27 +164,50 @@ public class Graph_algo {
     
 	public String getInfo() {
 		String info =   "Graph: |V|="+graph.getV()+", |E|="+graph.getE()+
-						" Radius: "+getRadius()+",  Diameter: "+getDiameter()+", runtime: "+
-						getRutTime()+" ms   ";
+						" Radius: "+getRadius()+",  Diameter: ";
 		return info;
 	}
 
 
 
 
-    private String getDiameter() {
-		// TODO Auto-generated method stub
-		return null;
+    public double getDiameter() {
+    	double maxNeb [] = new double [graph.getV()];
+		for (int i = 0; i < maxNeb.length; i++) {
+			Graph_algo temp = new Graph_algo(graph, i);
+			maxNeb[i]=minOrMaxValue(temp.distTo, "max");
+		}
+		return minOrMaxValue(maxNeb, "max");
 	}
 
-	private String getRadius() {
-		// TODO Auto-generated method stub
-		return null;
+	private double getRadius() {
+		double maxNeb [] = new double [graph.getV()];
+		//graph.RetBL(BList);
+		for (int i = 0; i < maxNeb.length; i++) {
+			Graph_algo temp = new Graph_algo(graph, i);
+			maxNeb[i]=minOrMaxValue(temp.distTo, "max");
+		}
+		return minOrMaxValue(maxNeb, "min");
 	}
 	
-	private String getRutTime() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	private double minOrMaxValue(double [] arr, String flag){
+		if (flag.equals("max")){
+			double max= arr[0];
+			for (int i = 1; i < arr.length; i++) {
+				if(arr[i]>max)
+					max=arr[i];
+			}
+			return max;
+		}
+		else{
+			double min= arr[0];
+			for (int i = 1; i < arr.length; i++) {
+				if(arr[i]<min)
+					min=arr[i];
+			}
+			return min;	
+		}
 	}
 
 	// check optimality conditions:

@@ -10,6 +10,9 @@ public class TestGraphAlgo {
 	String answerFileName = "D:\\answer2.txt";
 	Graph_algo graphAlgo;
 	Graph graph;
+	long startTime = System.currentTimeMillis();
+	double diameter;
+
 	
 	/*
 	 * algoritem to tests files
@@ -18,6 +21,7 @@ public class TestGraphAlgo {
 		File file= new File(fileName);
         graph = new Graph(file);
        this.graphAlgo = new Graph_algo(graph, defualtStartVertex);
+       this.diameter = graphAlgo.getDiameter();
        
 	}
 	
@@ -53,7 +57,13 @@ public class TestGraphAlgo {
 	}
 	
 	private String getInfo() {
-		return graphAlgo.getInfo();
+		return graphAlgo.getInfo() + this.diameter  + ", runtime: "+ getRunTime() + " ms   ";
+	}
+	
+	private long getRunTime() {
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - startTime;		
+		return totalTime;
 	}
 
 	private String getAnswer(int start, int end, int numOfBlackList, int[] arrBlackList) {
@@ -88,6 +98,7 @@ public class TestGraphAlgo {
 			return null;
 		}
 	}
+	
 	
 	public static void main(String[] args) {
 		TestGraphAlgo test = new TestGraphAlgo("d:\\GO2.txt");
