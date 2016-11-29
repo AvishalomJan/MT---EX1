@@ -111,6 +111,7 @@ public class Graph {
             validateVertex(w);
             double weight = in.readDouble();
             addEdge(new DirectedEdge(v, w, weight));
+            addEdge(new DirectedEdge(w, v, weight));
         }
     }
 
@@ -205,6 +206,7 @@ public class Graph {
         }
         
     }
+
     
 
     /**

@@ -7,16 +7,27 @@ import java.util.InputMismatchException;
 public class TestGraphAlgo {
 
 	int defualtStartVertex = 0;
-	String answerFileName = "D:\\answer1.txt";
+	String answerFileName = "D:\\answer2.txt";
 	Graph_algo graphAlgo;
+	Graph graph;
+	long startTime = System.currentTimeMillis();
+	double diameter;
+
 	
+	/*
+	 * algoritem to tests files
+	 */
 	public TestGraphAlgo(String fileName){
 		File file= new File(fileName);
-        Graph graph = new Graph(file);
+        graph = new Graph(file);
        this.graphAlgo = new Graph_algo(graph, defualtStartVertex);
+       this.diameter = graphAlgo.getDiameter();
        
 	}
 	
+	/*
+	 * run this class - the main method
+	 */
 	public void RunTestFile (String testFileName){
 		String answer;
 		PrintWriter writerToAnswerFile = CreatNewAnswerFile (answerFileName);
@@ -46,16 +57,27 @@ public class TestGraphAlgo {
 	}
 	
 	private String getInfo() {
-		return graphAlgo.getInfo();
+		return graphAlgo.getInfo() + this.diameter  + ", runtime: "+ getRunTime() + " ms   ";
+	}
+	
+	private long getRunTime() {
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - startTime;		
+		return totalTime;
 	}
 
 	private String getAnswer(int start, int end, int numOfBlackList, int[] arrBlackList) {
 		String ans = ""+start +" "+ end +" "+ numOfBlackList +" "+ PrintArray(arrBlackList) +" ";
 		if(numOfBlackList == 0){
-			ans  = ans + graphAlgo.distAToB(start, end);
+			//ans  = ans + graphAlgo.distAToB(start, end);
+			Graph_algo temp = new Graph_algo(graph, start);
+			ans  = ans + temp.distTo(end);
+			
 		}
 		else{
-			ans  = ans + graphAlgo.distAToB_WithBlackList(start, end, arrBlackList);
+			//ans  = ans + graphAlgo.distAToB_WithBlackList(start, end, arrBlackList);
+			Graph_algo temp = new Graph_algo(graph, start);
+			ans  = ans + temp.distAToB_WithBlackList(start, end, arrBlackList);
 		}
 		return ans;
 	}
@@ -63,7 +85,7 @@ public class TestGraphAlgo {
 	private String PrintArray(int[] arrBlackList) {
 		String ans = "";
 		for (int i = 0; i < arrBlackList.length; i++) {
-			ans = ans + arrBlackList[i];
+			ans = ans + " " + arrBlackList[i] ;
 		}
 		return ans;
 	}
@@ -77,8 +99,9 @@ public class TestGraphAlgo {
 		}
 	}
 	
+	
 	public static void main(String[] args) {
-		TestGraphAlgo test = new TestGraphAlgo("c:\\G0.txt");
+		TestGraphAlgo test = new TestGraphAlgo("d:\\GO2.txt");
 		test.RunTestFile("D:\\test1.txt");
 		
 	}
