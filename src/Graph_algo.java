@@ -163,7 +163,7 @@ public class Graph_algo {
     }
     
 	public String getInfo() {
-		String info =   "Graph: |V|="+graph.getV()+", |E|="+graph.getE()+
+		String info =   "Graph: |V|="+graph.getV()+", |E|="+graph.getE()/2+
 						" Radius: "+getRadius()+",  Diameter: ";
 		return info;
 	}

@@ -153,7 +153,7 @@ public class Graph {
      * @return the number of edges in this edge-weighted digraph
      */
 	public int getE() {
-		return E/2;
+		return E;
 	}
 
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
